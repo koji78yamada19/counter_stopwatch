@@ -8,181 +8,214 @@ import {
   StatusBar,
   Platform,
   TouchableOpacity,
-  AsyncStorage,
-  KeyboardAvoidingView,
+  AsyncStorage,//辞書型で文字列が保存ができる物mono
+  filterText,
+  KeyboardAvoidingView
 } from 'react-native';
 
-import { Input, Button, ListItem } from 'react-native-elements';
+import { SearchBar, Input, Button, ListItem } from "react-native-elements"
 import Icon from 'react-native-vector-icons/Feather';
-import CheckIcon from 'react-native-vector-icons/MaterialIcons';
+import CheackIcon from "react-native-vector-icons/MaterialIcons"
 
-// ES6 三項演算子  : else にあたる
 const StatusBarHeight = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
-// AsyncStorageに保存する用のキー
-const TODO = "@todoApp:todoList";
+//AsyncStrageに保存する用のキー
+const LOGS = "@LogsApp:logsList"
 
-// Todoを表示するコンポーネント。 タッチ可能なコンポーネントにしている
-const TodoItem = (props) => {
-  let textStyle = styles.todoItemWrap;
-  let icon = null;
-  if (props.done === true) {
-    icon = <CheckIcon name="done" />
-    textStyle = styles.todoItemDoneWrap;
-  }
+// const storage = new Storage({
+//   storageBackend: AsyncStorage
+// })
+
+const LogsItem = (props) => {
+  // let textStyle = styles.LogsItem;
+
+  // let icon = null;
+  // if (props.done === true) {
+  //   icon = <CheackIcon name="done" />//チェックマーク
+  //   textStyle = styles.LogsItemDone
+  // }
   return (
     <TouchableOpacity
-      style={textStyle}
-      onLongPress={props.deleteTodo}
-      onPress={props.TapTodoItem}
-    >
+      onPress={props.tapLogsItem} //ここにリスト短く押した時にtapTodoItemの処理を実行するように書いている
+      onLongPress={props.deleteLogs}>
       <ListItem
-        title={props.title}
-        rightIcon={icon}
-        bottomDivider
-        titleStyle={styles.todoItem}
+        title={props.task + "      " + props.time}
+        bottomDivider//下線
+      // titleStyle={textStyle}
       />
     </TouchableOpacity>
   )
 }
 
-export default class TodoApp extends React.Component {
 
-  constructor(props) {  // stateで書くため
+//ここらへん参考になる
+export default class LogsApp extends React.Component {
+  constructor(props) {
     super(props);
 
     this.state = {
-      todoList: [],
+      logsList: [],
       currentIndex: 0,
-      inputText: "", // テキスト入力用の箱を用意
+      inputText: "",
       filterText: "",
     }
   }
 
-  // データの永続化。もう一回アプリを起動しても残っている
-
-  async componentDidMount() {  //  AsyncStorageに保存されたものを読み込む
-    this.loadTodo();
+  async componentDidMount() {
+    this.loadLogs();
   }
 
 
-  loadTodo = async () => {  // AsyncStorage からTODO を読み込む
-    try {  // 非同期通信：成功するかどうかわからない
-      let todoString = await AsyncStorage.getItem(TODO);
-      if (todoString) {
-        let todoList = JSON.parse(todoString); // JSON型から戻す
-        let currentIndex = todoList.length; // todoリストの長さ
+  loadLogs = async () => {
+    try {
+      let LogsString = await AsyncStorage.getItem("logsList:key");
+
+      console.log(LogsString)
+      if (LogsString) {
+
+
+        let logsList = JSON.parse(LogsString);
+        // let currentIndex = logsList.length;
         this.setState({
-          todoList: todoList,
-          currentIndex: currentIndex,
+          logsList: logsList,
         });
       }
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
-  addTodo = () => {
+
+  addLogs = () => {
     let title = this.state.inputText;
-    if (title == "") {
+    if (title === "") {
       return
     }
     let index = this.state.currentIndex + 1;
-    let newTodo = { index: index, title: title, done: false }; // 連想配列
-    let todoList = [...this.state.todoList, newTodo]; //ES6 スプレッド構文
-    // console.log(todoList)
-    this.setState({  //最後に、this.setState を使って状態の書き換え
-      todoList: todoList,
+    let newLogs = { index: index, title: title, done: false };
+    let logsList = [...this.state.logsList, newLogs];//ES6のスプレッド構文
+    this.setState({
+      logsList: logsList,
       currentIndex: index,
       inputText: "",
     });
-    this.saveTodo(todoList); // saveTodo に addTodo で作られたリストを渡す（上書き）
+    //Asyncstrageに保存
+    this.saveLogs(logsList)
   }
-  // AsyncStorageへTODOを保存
-  saveTodo = async (todoList) => {  // async は、非同期通信って意味。裏で走る。
+
+
+  //asyncの保存する処理
+  saveLogs = async (logsList) => {
     try {
-      let todoString = JSON.stringify(todoList);  // json型に変換
-      await AsyncStorage.setItem(TODO, todoString);  //async , await はセット。await : 裏で走らせない。キー：中身（1対1）
-    } catch (e) {   // try catch 例外処理。エラーが出たときの処理。 e : エラー文
-      console.log(e);
+      //logsListをJSONの形に変換
+      let LogsString = JSON.stringify(logsList);
+      //ここで保存を行う
+      await AsyncStorage.setItem(LOGS, LogsString);//awaitはbreakみたいに処理を終わらせてあげるもの
+    } catch (e) {//tryが失敗した場合実行 elseぶんのようなもの
+      console.log(e);//デバック用にエラーを吐くように
     }
   }
 
-  TapTodoItem = (todoItem) => {
-    let todoList = this.state.todoList;
-    let index = todoList.indexOf(todoItem); // todoItem は、何番目にいますか
-    todoItem.done = !todoItem.done; // 真理値を逆にする
-    todoList[index] = todoItem;
-    this.setState({ todoList: todoList });
-    this.saveTodo(todoList);
+
+  tapLogsItem = (LogsItem) => {
+    let logsList = this.state.logsList;
+    let index = logsList.indexOf(LogsItem);
+    LogsItem.done = !LogsItem.done;
+    logsList[index] = LogsItem;
+    this.setState({ logsList: logsList });
+    this.saveLogs(logsList);
   }
-  deleteTodo = (todoItem) => {
-    let todoList = this.state.todoList;
-    let index = todoList.indexOf(todoItem);
-    todoList.splice(index, 1);   // 配列の何番目から何番目を削除しますか  例.4番目から4番目
-    this.setState({ todoList: todoList });
-    this.saveTodo(todoList);
+
+  deleteLogs = (LogsItem) => {
+    let logsList = this.state.logsList;
+    let index = logsList.indexOf(LogsItem);
+    logsList.splice(index, 1);
+    this.setState({ logsList: logsList });
+    this.saveLogs(logsList);
   }
 
   render() {
-
-    // フィルター処理 フィルタリングの対象は2つ
     const filterText = this.state.filterText;
-    let todoList = this.state.todoList;
-    if (filterText !== "") {
-      todoList = todoList.filter(t => t.title.includes(filterText)); // 入力されたものがタイトルに含まれているもの
-    }
+    let logsList = this.state.logsList;
 
     const platform = Platform.OS === 'ios' ? 'ios' : 'android';
 
-    return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <ScrollView style={styles.todoList}>
+
+    return (//一個のreturnに対してviewは１つ
+      //   <KeyboardAvoidingView style={styles.container}  behavior="padding">
+
+      //   <SearchBar
+      //    onChangeText={(text) => this.setState({filterText: text})}
+      //    value={this.state.filterText}
+      //    placeholder="Logs検索"
+      //    onClear={()=> this.setState({filterText:""})}
+      //    cancelButtonTitle="キャンセル"
+      //    platform={platform}
+      //  />
+
+
+
+      <View style={styles.container}>
+
+
+
+        <View style={styles.pagetitle}>
+          <Text style={styles.titlelogs}>LOGS</Text>
+        </View>
+
+        <ScrollView style={styles.logsList}>
           <FlatList
-            data={todoList} // 配列 ループを持ったコンポーネント フィルタリングで作った todoList
-            extraData={this.state}  // ??
+            data={logsList}
+            extraData={this.state}
             renderItem={({ item }) =>
-              <TodoItem
-                title={item.title}
-                done={item.done}
-                TapTodoItem={() => this.TapTodoItem(item)} // 先ほど処理を書いた、TapTodoItem 関数
-                deleteTodo={() => this.deleteTodo(item)}
+              <LogsItem
+                task={item.task}
+                time={item.time}
+                tapLogsItem={() => this.tapLogsItem(item)}
+                deleteLogs={() => this.deleteLogs(item)}
               />
             }
-            keyExtractor={(item, index) => "todo_" + item.index}
+            keyExtractor={(item, index) => "Logs_" + index}
           />
         </ScrollView>
-        <View style={styles.input}>
-          <Input
-            style={styles.inputText}
-            onChangeText={(text) => this.setState({ inputText: text })}
-            value={this.state.inputText}
-          />
-          <Button
-            onPress={this.addTodo}
-            title=""
-            color="#C69C6C"
-            icon={
-              <Icon
-                name="plus" // icon の名前は決まっている vector icons
-                size={30}
-                color="#fff"
-              />
-            }
-            buttonStyle={styles.inputButton} // button にcssを利かすよ
-          />
-        </View>
-      </KeyboardAvoidingView>
-    );
-  }
 
+
+        {/* //  <View style={styles.input}>
+    //      <Input */}
+        {/* //        style={styles.inputText}
+    //        onChangeText={(text) => this.setState({inputText: text})}
+    //        value={this.state.inputText}
+    //      />
+    //      <Button */}
+        {/* //      onPress={this.addLogs}
+    //         title=""
+    //         color="#C69C6C"
+    //          icon={ */}
+        {/* //        <Icon
+    //         name="plus"
+    //         size={30}
+    //         color="fff"
+    //        />
+    //       }
+    //        buttonStyle={styles.inputButton}
+    //      />
+    //    </View>
+    //   </KeyboardAvoidingView>  */}
+
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // ステータスバーの高さだけ下にずらす
+    // alignItems: 'center',
+    //justifyContent: 'center',
     paddingTop: StatusBarHeight,
+
+
+    //ステータスバーの高さだけ下にずらす
   },
   filter: {
     height: 50,
@@ -190,29 +223,44 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "#c7c7c7",
+
   },
   input: {
     height: 50,
     margin: 10,
+    // borderBottomWidth:1,
+    // borderColor:"#c7c7c7",
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 60,
+    paddingRight: 60
   },
   inputText: {
-    flex: 1, // 残りをビーっと伸びてくれる
+    flex: 5,
     padding: 10,
   },
-  todoList: {
+  logsList: {
     flex: 1,
+
   },
-  todoItem: {  // 違うかも？
+  LogsItem: {
     fontSize: 20,
-    lineHeight: 30, // android用
+    lineHeight: 30,
   },
-  todoItemDone: {  // 違うかも？
+  // todoItemWrap: {
+  //   padding: 10,
+  //   backgroundColor: "#fff",
+  //   borderBottomWidth:1,
+  //   borderColor: "#c7c7c7",
+  // },
+  // todoItemDoneWrap: {
+  //   padding: 10,
+  //   backgroundColor: "#c7c7c7",
+  //   borderBottomWidth:1,
+  //   borderColor: "#c7c7c7",
+  // },
+  LogsItemDone: {
     fontSize: 20,
-    lineHeight: 30, // android用
-    color: '#c7c7c7',
+    lineHeight: 30,
   },
   inputButton: {
     width: 48,
@@ -222,4 +270,16 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     backgroundColor: "#C69C6C",
   },
+
+
+  pagetitle: {
+    flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: "gray",
+    marginBottom: 15,
+  },
+  titlelogs: {
+    fontSize: 70,
+
+  }
 });

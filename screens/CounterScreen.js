@@ -85,46 +85,128 @@ export default class App extends React.Component {
     console.log(CURRENTTIME);
   }
 
-  lapTime1() {  // lapTime  // 変えた
-    CURRENTTIME = CURRENTTIME.replace(/:/g, '');
-    array1.push(CURRENTTIME);
-    lap1.push((Number(CURRENTTIME) - Number(array1[array1.length - 2])) / 1000);  // - array[Number(array.length) - 1]
-    console.log(lap1);
-    console.log(this.state.inputText1);
-    if (lap1.length > 1) {
-      console.log(lap1[lap1.length - 1])
+  async lapTime1() {  // lapTime  // 変えた
+    try {
+      const logsListJson = await AsyncStorage.getItem('logsList:key');
+      let logsList = JSON.parse(logsListJson)
+
+
+      CURRENTTIME = CURRENTTIME.replace(/:/g, '');
+      array1.push(CURRENTTIME);
+      lap1.push((Number(CURRENTTIME) - Number(array1[array1.length - 2])) / 1000);  // - array[Number(array.length) - 1]
+      // console.log(lap1);
+      // console.log(this.state.inputText1);
+      if (lap1.length > 1) {
+        // console.log(lap1[lap1.length - 1]);
+        let logItem = { task: this.state.inputText1, time: lap1[lap1.length - 1] }
+        // console.log("-------------------------------")
+        // console.log(logItem)
+        // console.log("-------------------------------")
+
+        let newLogsList = [...logsList, logItem];
+
+        // console.log("-------------------------------")
+        console.log(newLogsList)
+        // console.log("-------------------------------")
+        try {
+          let logsJson = JSON.stringify(newLogsList)
+          await AsyncStorage.setItem('logsList:key', logsJson);
+        } catch (error) {
+          // Error saving data
+        }
+      }
+    } catch (error) {
+      // Error retrieving data
     }
   }
 
-  lapTime2() {
-    CURRENTTIME = CURRENTTIME.replace(/:/g, '');
-    array2.push(CURRENTTIME);
-    lap2.push((Number(CURRENTTIME) - Number(array2[array2.length - 2])) / 1000);
-    console.log(lap2);
-    console.log(this.state.inputText2);
-    if (lap2.length > 1) {
-      console.log(lap2[lap2.length - 1])
+  async lapTime2() {  // lapTime  // 変えた
+    try {
+      const logsListJson = await AsyncStorage.getItem('logsList:key');
+      let logsList = JSON.parse(logsListJson)
+
+
+      CURRENTTIME = CURRENTTIME.replace(/:/g, '');
+      array2.push(CURRENTTIME);
+      lap2.push((Number(CURRENTTIME) - Number(array2[array2.length - 2])) / 1000);  // - array[Number(array.length) - 1]
+
+      if (lap2.length > 1) {
+        let logItem = { task: this.state.inputText2, time: lap2[lap2.length - 1] }
+
+        let newLogsList = [...logsList, logItem];
+
+        // console.log("-------------------------------")
+        console.log(newLogsList)
+        // console.log("-------------------------------")
+        try {
+          let logsJson = JSON.stringify(newLogsList)
+          await AsyncStorage.setItem('logsList:key', logsJson);
+        } catch (error) {
+          // Error saving data
+        }
+      }
+    } catch (error) {
+      // Error retrieving data
     }
   }
 
-  lapTime3() {
-    CURRENTTIME = CURRENTTIME.replace(/:/g, '');
-    array3.push(CURRENTTIME);
-    lap3.push((Number(CURRENTTIME) - Number(array3[array3.length - 2])) / 1000);
-    console.log(lap3);
-    console.log(this.state.inputText3);
-    if (lap3.length > 1) {
-      console.log(lap3[lap3.length - 1])
+  async lapTime3() {  // lapTime  // 変えた
+    try {
+      const logsListJson = await AsyncStorage.getItem('logsList:key');
+      let logsList = JSON.parse(logsListJson)
+
+
+      CURRENTTIME = CURRENTTIME.replace(/:/g, '');
+      array3.push(CURRENTTIME);
+      lap3.push((Number(CURRENTTIME) - Number(array3[array3.length - 2])) / 1000);  // - array[Number(array.length) - 1]
+
+      if (lap3.length > 1) {
+        let logItem = { task: this.state.inputText3, time: lap3[lap3.length - 1] }
+
+        let newLogsList = [...logsList, logItem];
+
+        // console.log("-------------------------------")
+        console.log(newLogsList)
+        // console.log("-------------------------------")
+        try {
+          let logsJson = JSON.stringify(newLogsList)
+          await AsyncStorage.setItem('logsList:key', logsJson);
+        } catch (error) {
+          // Error saving data
+        }
+      }
+    } catch (error) {
+      // Error retrieving data
     }
   }
 
-  lapTime4() {
-    CURRENTTIME = CURRENTTIME.replace(/:/g, '');
-    array4.push(CURRENTTIME);
-    lap4.push((Number(CURRENTTIME) - Number(array4[array4.length - 2])) / 1000);
-    console.log(this.state.inputText4);
-    if (lap4.length > 1) {
-      console.log(lap4[lap4.length - 1])
+  async lapTime4() {  // lapTime  // 変えた
+    try {
+      const logsListJson = await AsyncStorage.getItem('logsList:key');
+      let logsList = JSON.parse(logsListJson)
+
+
+      CURRENTTIME = CURRENTTIME.replace(/:/g, '');
+      array4.push(CURRENTTIME);
+      lap4.push((Number(CURRENTTIME) - Number(array4[array4.length - 2])) / 1000);  // - array[Number(array.length) - 1]
+
+      if (lap4.length > 1) {
+        let logItem = { task: this.state.inputText2, time: lap4[lap4.length - 1] }
+
+        let newLogsList = [...logsList, logItem];
+
+        // console.log("-------------------------------")
+        console.log(newLogsList)
+        // console.log("-------------------------------")
+        try {
+          let logsJson = JSON.stringify(newLogsList)
+          await AsyncStorage.setItem('logsList:key', logsJson);
+        } catch (error) {
+          // Error saving data
+        }
+      }
+    } catch (error) {
+      // Error retrieving data
     }
   }
 
@@ -173,19 +255,6 @@ export default class App extends React.Component {
       })
     }
   }
-
-  //  plus1 = () => {
-  //    if(this.state.counter1 = 0){
-  //      this.setState({
-  //     counter1: this.state.counter1 + 1,
-  //     isStopwatchStart: !this.state.isStopwatchStart,
-  //   })
-  // } else {
-  //   this.setState({
-  //     counter1: this.state.counter1 + 1,
-  //   })
-  // }
-  //  }
 
   plus1 = () => {
     this.setState({
@@ -300,7 +369,7 @@ export default class App extends React.Component {
     const platform = Platform.OS === 'ios' ? 'ios' : 'android';
 
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.container} behavior="padding">
         <View style={styles.content}>
           <View style={styles.input}>
             <Input
@@ -427,21 +496,21 @@ export default class App extends React.Component {
               getTime={this.getFormattedTime} />
 
             <View style={{ flexDirection: "row", justifyContent: 'space-around', }}>
-              <TouchableHighlight onPress={this.startStopStopWatch} >
+              <TouchableOpacity onPress={this.resetStopwatch}>
+                <Text style={styles.stop}>■</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.startStopStopWatch} >
                 <Text style={{ fontSize: 45, marginTop: 10, color: "#00F" }}>
                   {!this.state.isStopwatchStart ? "▶" : "Ⅱ"}
                 </Text>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={this.resetStopwatch}>
-                <Text style={{ fontSize: 40, marginTop: 10, color: "#F00" }}>■</Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
               {/* <TouchableHighlight onPress={this.resetStartStopWatch}>
                     <Text style={{ fontSize: 45, marginTop: 10, color: "#F00" }}>♦</Text>
                 </TouchableHighlight> */}
             </View>
           </View >
         </View >
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -507,14 +576,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '40%',
-
   },
 
   logs: {
     textAlign: 'center',
     fontSize: 20,
     paddingTop: 15,
+  },
+
+  stop: {
+    fontSize: 40,
+    marginTop: 10,
+    color: "#F00",
+    marginRight: 80
   }
+
 
 });
 
