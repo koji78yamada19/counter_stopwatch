@@ -3,8 +3,8 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+import CounterScreen from '../screens/CounterScreen';
+import LogsScreen from '../screens/LogsScreen';
 // import SettingsScreen from '../screens/SettingsScreen';
 
 const config = Platform.select({
@@ -12,15 +12,15 @@ const config = Platform.select({
   default: {},
 });
 
-const HomeStack = createStackNavigator(
+const CounterStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Counter: CounterScreen,
   },
   config
 );
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+CounterStack.navigationOptions = {
+  tabBarLabel: 'Counter',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -33,23 +33,23 @@ HomeStack.navigationOptions = {
   ),
 };
 
-HomeStack.path = '';
+CounterStack.path = '';
 
-const LinksStack = createStackNavigator(
+const LogsStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    Logs: LogsScreen,
   },
   config
 );
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+LogsStack.navigationOptions = {
+  tabBarLabel: 'Logs',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
   ),
 };
 
-LinksStack.path = '';
+LogsStack.path = '';
 
 // const SettingsStack = createStackNavigator(
 //   {
@@ -68,8 +68,8 @@ LinksStack.path = '';
 // SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
+  CounterStack,
+  LogsStack,
   // SettingsStack,
 });
 
