@@ -92,8 +92,9 @@ export default class App extends React.Component {
         // console.log(this.state.inputText1);
         // if (lap1.length > 1) {
         console.log(this.state.inputText1);
-        console.log(lap1[lap1.length - 1])
-        // }
+        if (lap2.length > 1) {
+            console.log(lap1[lap1.length - 1])
+        }
     }
 
     lapTime2() {

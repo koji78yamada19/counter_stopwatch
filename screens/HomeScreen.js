@@ -97,8 +97,6 @@ export default class App extends React.Component {
     timeDisplay = console.log(lap1[lap1.length - 1])
   }
 
-
-
   lapTime2() {
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
     array2.push(CURRENTTIME);
