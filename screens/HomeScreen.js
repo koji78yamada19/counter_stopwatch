@@ -94,7 +94,9 @@ export default class App extends React.Component {
     lap1.push((Number(CURRENTTIME) - Number(array1[array1.length - 2])) / 1000);  // - array[Number(array.length) - 1]
     console.log(lap1);
     console.log(this.state.inputText1);
-    timeDisplay = console.log(lap1[lap1.length - 1])
+    if (lap1.length > 1) {
+      console.log(lap1[lap1.length - 1])
+    }
   }
 
   lapTime2() {
@@ -102,8 +104,10 @@ export default class App extends React.Component {
     array2.push(CURRENTTIME);
     lap2.push((Number(CURRENTTIME) - Number(array2[array2.length - 2])) / 1000);
     console.log(lap2);
-    // console.log(this.state.inputText2);
-    console.log(lap2[lap2.length - 1])
+    console.log(this.state.inputText2);
+    if (lap2.length > 1) {
+      console.log(lap2[lap2.length - 1])
+    }
   }
 
   lapTime3() {
@@ -111,45 +115,48 @@ export default class App extends React.Component {
     array3.push(CURRENTTIME);
     lap3.push((Number(CURRENTTIME) - Number(array3[array3.length - 2])) / 1000);
     console.log(lap3);
-    // console.log(this.state.inputText3);
-    console.log(lap3[lap3.length - 1])
+    console.log(this.state.inputText3);
+    if (lap3.length > 1) {
+      console.log(lap3[lap3.length - 1])
+    }
   }
 
   lapTime4() {
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
     array4.push(CURRENTTIME);
     lap4.push((Number(CURRENTTIME) - Number(array4[array4.length - 2])) / 1000);
-    console.log(lap4);
-    // console.log(this.state.inputText4);
-    console.log(lap4[lap4.length - 1])
+    console.log(this.state.inputText4);
+    if (lap4.length > 1) {
+      console.log(lap4[lap4.length - 1])
+    }
   }
 
   // AsyncStorage からCURRENTTIME を読み込む
-  loadCurrentTime = async () => {
-    try {  // 非同期通信：成功するかどうかわからない
-      let currentTimeString = await AsyncStorage.getItem(CURRENTTIME);
-      if (currentTimeString) {
-        let currentTimeList = JSON.parse(currentTimeString); // JSON型から戻す
-        let currentIndex = currentTimeList.length; // currentTimeリストの長さ
-        this.setState({
-          currentTimeList: currentTimeList,
-          currentIndex: currentIndex,
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // loadCurrentTime = async () => {
+  //   try {  // 非同期通信：成功するかどうかわからない
+  //     let currentTimeString = await AsyncStorage.getItem(CURRENTTIME);
+  //     if (currentTimeString) {
+  //       let currentTimeList = JSON.parse(currentTimeString); // JSON型から戻す
+  //       let currentIndex = currentTimeList.length; // currentTimeリストの長さ
+  //       this.setState({
+  //         currentTimeList: currentTimeList,
+  //         currentIndex: currentIndex,
+  //       });
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   // AsyncStorageへCURRENTTIMEを保存
-  saveCurrentTime = async (currentTimeList) => {  // async は、非同期通信って意味。裏で走る。
-    try {
-      let currentTimeString = JSON.stringify(currentTimeList);  // json型に変換
-      await AsyncStorage.setItem(CURRENTTIME, currentTimeString);  //async , await はセット。await : 裏で走らせない。キー：中身（1対1）
-    } catch (e) {   // try catch 例外処理。エラーが出たときの処理。 e : エラー文
-      console.log(e);
-    }
-  }
+  // saveCurrentTime = async (currentTimeList) => {  // async は、非同期通信って意味。裏で走る。
+  //   try {
+  //     let currentTimeString = JSON.stringify(currentTimeList);  // json型に変換
+  //     await AsyncStorage.setItem(CURRENTTIME, currentTimeString);  //async , await はセット。await : 裏で走らせない。キー：中身（1対1）
+  //   } catch (e) {   // try catch 例外処理。エラーが出たときの処理。 e : エラー文
+  //     console.log(e);
+  //   }
+  // }
 
   setInitialState = async () => {
     // react-native-storageは、読み込みがとても速い
@@ -299,6 +306,8 @@ export default class App extends React.Component {
 
   render() {
     const platform = Platform.OS === 'ios' ? 'ios' : 'android';
+
+    // console.log(this.state.inputText1);
 
     return (
 
@@ -523,7 +532,7 @@ const options = {
     alignItems: 'center',
   },
   text: {
-    fontSize: 35,
+    fontSize: 30,
     color: '#FFF',
     marginLeft: 7,
   }
