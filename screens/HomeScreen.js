@@ -26,18 +26,19 @@ const storage = new Storage({
   storageBackend: AsyncStorage
 })
 
-
-var array1 = [];
+var array1 = [0];
 var lap1 = [];
 
-var array2 = [];
+var array2 = [0];
 var lap2 = [];
 
-var array3 = [];
+var array3 = [0];
 var lap3 = [];
 
-var array4 = [];
+var array4 = [0];
 var lap4 = [];
+
+
 
 export default class App extends React.Component {
 
@@ -64,6 +65,8 @@ export default class App extends React.Component {
   // this.constructor.displayNameで、自身のクラス名を取得
   className = this.constructor.displayName
 
+
+
   componentDidMount = () => {
     this.setInitialState()
   }
@@ -84,47 +87,69 @@ export default class App extends React.Component {
     console.log(CURRENTTIME);
   }
 
+
   lapTime1() {  // lapTime  // 変えた
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
     array1.push(CURRENTTIME);
     lap1.push((Number(CURRENTTIME) - Number(array1[array1.length - 2])) / 1000);  // - array[Number(array.length) - 1]
-    // console.log(lap1);
-    console.log(this.state.input(inputText1));
-    if (lap1.length > 1) {
-      console.log(lap1[lap1.length - 1])
-    }
+    console.log(lap1);
+    console.log(this.state.inputText1);
+    timeDisplay = console.log(lap1[lap1.length - 1])
   }
+
+
 
   lapTime2() {
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
     array2.push(CURRENTTIME);
     lap2.push((Number(CURRENTTIME) - Number(array2[array2.length - 2])) / 1000);
-    // console.log(lap2);
-    console.log(this.state.input(inputText2));
-    if (lap2.length > 1) {
-      console.log(lap2[lap2.length - 1])
-    }
+    console.log(lap2);
+    // console.log(this.state.inputText2);
+    console.log(lap2[lap2.length - 1])
   }
 
   lapTime3() {
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
     array3.push(CURRENTTIME);
     lap3.push((Number(CURRENTTIME) - Number(array3[array3.length - 2])) / 1000);
-    // console.log(lap3);
-    console.log(this.state.input(inputText3));
-    if (lap3.length > 1) {
-      console.log(lap3[lap3.length - 1])
-    }
+    console.log(lap3);
+    // console.log(this.state.inputText3);
+    console.log(lap3[lap3.length - 1])
   }
 
   lapTime4() {
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
     array4.push(CURRENTTIME);
     lap4.push((Number(CURRENTTIME) - Number(array4[array4.length - 2])) / 1000);
-    // console.log(lap4);
-    console.log(this.state.input(inputText4));
-    if (lap4.length > 1) {
-      console.log(lap4[lap4.length - 1])
+    console.log(lap4);
+    // console.log(this.state.inputText4);
+    console.log(lap4[lap4.length - 1])
+  }
+
+  // AsyncStorage からCURRENTTIME を読み込む
+  loadCurrentTime = async () => {
+    try {  // 非同期通信：成功するかどうかわからない
+      let currentTimeString = await AsyncStorage.getItem(CURRENTTIME);
+      if (currentTimeString) {
+        let currentTimeList = JSON.parse(currentTimeString); // JSON型から戻す
+        let currentIndex = currentTimeList.length; // currentTimeリストの長さ
+        this.setState({
+          currentTimeList: currentTimeList,
+          currentIndex: currentIndex,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // AsyncStorageへCURRENTTIMEを保存
+  saveCurrentTime = async (currentTimeList) => {  // async は、非同期通信って意味。裏で走る。
+    try {
+      let currentTimeString = JSON.stringify(currentTimeList);  // json型に変換
+      await AsyncStorage.setItem(CURRENTTIME, currentTimeString);  //async , await はセット。await : 裏で走らせない。キー：中身（1対1）
+    } catch (e) {   // try catch 例外処理。エラーが出たときの処理。 e : エラー文
+      console.log(e);
     }
   }
 
@@ -144,9 +169,26 @@ export default class App extends React.Component {
         key: this.className,
         data: this.state
       })
+
     }
   }
 
+
+
+
+
+  //  plus1 = () => {
+  //    if(this.state.counter1 = 0){
+  //      this.setState({
+  //     counter1: this.state.counter1 + 1,
+  //     isStopwatchStart: !this.state.isStopwatchStart,
+  //   })
+  // } else {
+  //   this.setState({
+  //     counter1: this.state.counter1 + 1,
+  //   })
+  // }
+  //  }
   plus1 = () => {
     this.setState({
       counter1: this.state.counter1 + 1
@@ -260,167 +302,157 @@ export default class App extends React.Component {
   render() {
     const platform = Platform.OS === 'ios' ? 'ios' : 'android';
 
-    console.log(this.state.inputText1);
-    console.log(this.state.inputText2);
-    console.log(this.state.inputText3);
-    console.log(this.state.inputText4);
-
-
     return (
 
-      <View>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <ScrollView style={styles.content}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <View style={styles.content}>
+          <View style={styles.input}>
+            <Input
+              style={styles.inputText}
+              onChangeText={(text) => this.setState({ inputText1: text })}
+              value={this.state.inputText1}
 
 
-            <View style={styles.input}>
-              <Input
-                style={styles.inputText}
-                onChangeText={(text) => this.setState({ inputText1: text })}
-                value={this.state.inputText1}
-              />
-            </View>
-            <Text style={styles.counter}>{this.state.counter1}</Text>
-            <View style={styles.btnWrap}>
+            />
 
-              <Button
-                text="+"
-                function={this.plus1}
-                style={{ backgroundColor: "blue" }}
+          </View>
+          <Text style={styles.counter}>{this.state.counter1}</Text>
+          <View style={styles.btnWrap}>
 
-              />
-              <Button
-                text="-"
-                function={this.minus1}
-                style={{ backgroundColor: "red" }}
-              />
-              <Button
-                text='reset'
-                function={this.reset1}
-                style={{ backgroundColor: "#00a968" }}>
-              </Button>
-            </View>
-          </ScrollView>
+            <Button
+              text="+"
+              function={this.plus1}
+              style={{ backgroundColor: "blue" }}
 
-          <ScrollView style={styles.content}>
-            <View style={styles.input}>
-              <Input
-                style={styles.inputText}
-                onChangeText={(text) => this.setState({ inputText2: text })}
-                value={this.state.inputText2}
-              />
-            </View>
-            <Text style={styles.counter}>{this.state.counter2}</Text>
+            />
+            <Button
+              text="-"
+              function={this.minus1}
+              style={{ backgroundColor: "red" }}
+            />
+            <Button
+              text='reset'
+              function={this.reset1}
+              style={{ backgroundColor: "#00a968" }}>
+            </Button>
+          </View>
+        </View >
 
-            <View style={styles.btnWrap}>
-              <Button
-                text="+"
-                function={this.plus2}
-                style={{ backgroundColor: "blue" }}
+        <View style={styles.content}>
+          <View style={styles.input}>
+            <Input
+              style={styles.inputText}
+              onChangeText={(text) => this.setState({ inputText2: text })}
+              value={this.state.inputText2}
+            />
+          </View>
+          <Text style={styles.counter}>{this.state.counter2}</Text>
 
-              />
-              <Button
-                text="-"
-                function={this.minus2}
-                style={{ backgroundColor: "red" }}
-              />
-              <Button
-                text='reset'
-                function={this.reset2}
-                style={{ backgroundColor: "#00a968" }}>
-              </Button>
-            </View>
-          </ScrollView>
+          <View style={styles.btnWrap}>
+            <Button
+              text="+"
+              function={this.plus2}
+              style={{ backgroundColor: "blue" }}
 
-          <ScrollView style={styles.content}>
-            <View style={styles.input}>
-              <Input
-                style={styles.inputText}
-                onChangeText={(text) => this.setState({ inputText3: text })}
-                value={this.state.inputText3}
-              />
-            </View>
-            <Text style={styles.counter}>{this.state.counter3}</Text>
-            <View style={styles.btnWrap}>
-              <Button
-                text="+"
-                function={this.plus3}
-                style={{ backgroundColor: "blue" }}
-              />
-              <Button
-                text="-"
-                function={this.minus3}
-                style={{ backgroundColor: "red" }}
-              />
-              <Button
-                text='reset'
-                function={this.reset3}
-                style={{ backgroundColor: "#00a968" }}>
-              </Button>
-            </View>
-          </ScrollView>
+            />
+            <Button
+              text="-"
+              function={this.minus2}
+              style={{ backgroundColor: "red" }}
+            />
+            <Button
+              text='reset'
+              function={this.reset2}
+              style={{ backgroundColor: "#00a968" }}>
+            </Button>
+          </View>
+        </View >
 
-          <ScrollView style={styles.content}>
-            <View style={styles.input}>
-              <Input
-                style={styles.inputText}
-                onChangeText={(text) => this.setState({ inputText4: text })}
-                value={this.state.inputText4}
-              />
-            </View>
-            <Text style={styles.counter}>{this.state.counter4}</Text>
-            <View style={styles.btnWrap}>
-              <Button
-                text="+"
-                function={this.plus4}
-                style={{ backgroundColor: "blue" }}
-              />
-              <Button
-                text="-"
-                function={this.minus4}
-                style={{ backgroundColor: "red" }}
-              />
-              <Button
-                text='reset'
-                function={this.reset4}
-                style={{ backgroundColor: "#00a968" }}>
-              </Button>
-            </View>
-          </ScrollView>
-          <ScrollView style={styles.content}>
-            <View style={styles.display}>
+        <View style={styles.content}>
+          <View style={styles.input}>
+            <Input
+              style={styles.inputText}
+              onChangeText={(text) => this.setState({ inputText3: text })}
+              value={this.state.inputText3}
+            />
+          </View>
+          <Text style={styles.counter}>{this.state.counter3}</Text>
+          <View style={styles.btnWrap}>
+            <Button
+              text="+"
+              function={this.plus3}
+              style={{ backgroundColor: "blue" }}
+            />
+            <Button
+              text="-"
+              function={this.minus3}
+              style={{ backgroundColor: "red" }}
+            />
+            <Button
+              text='reset'
+              function={this.reset3}
+              style={{ backgroundColor: "#00a968" }}>
+            </Button>
+          </View>
+        </View >
 
-              <Stopwatch laps msecs
-                options={options}
-                //options for the styling
-                start={this.state.isStopwatchStart}
-                //To start
-                reset={this.state.resetStopwatch}
-                //To reset
-                getTime={this.getFormattedTime} />
+        <View style={styles.content}>
+          <View style={styles.input}>
+            <Input
+              style={styles.inputText}
+              onChangeText={(text) => this.setState({ inputText4: text })}
+              value={this.state.inputText4}
+            />
+          </View>
+          <Text style={styles.counter}>{this.state.counter4}</Text>
+          <View style={styles.btnWrap}>
+            <Button
+              text="+"
+              function={this.plus4}
+              style={{ backgroundColor: "blue" }}
+            />
+            <Button
+              text="-"
+              function={this.minus4}
+              style={{ backgroundColor: "red" }}
+            />
+            <Button
+              text='reset'
+              function={this.reset4}
+              style={{ backgroundColor: "#00a968" }}>
+            </Button>
+          </View>
+        </View >
+        <View style={styles.content}>
+          <View style={styles.display}>
 
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableHighlight onPress={this.resetStopwatch} >
-                  <Text style={{ fontSize: 40, marginTop: 10, color: "#F00" }}>■</Text>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={this.startStopStopWatch}>
-                  <Text style={{ fontSize: 40, marginTop: 10, color: "#00F" }}>
-                    {!this.state.isStopwatchStart ? "▶" : "Ⅱ"}
-                  </Text>
-                </TouchableHighlight>
-                {/* <TouchableHighlight onPress={this.resetStartStopWatch}>
+            <Stopwatch laps msecs
+              options={options}
+              //options for the styling
+              start={this.state.isStopwatchStart}
+              //To start
+              reset={this.state.resetStopwatch}
+              //To reset
+              getTime={this.getFormattedTime} />
+
+
+            <TouchableHighlight onPress={this.startStopStopWatch}>
+              <Text style={{ fontSize: 45, marginTop: 10, color: "#00F" }}>
+                {!this.state.isStopwatchStart ? "▶" : "Ⅱ"}
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={this.resetStopwatch}>
+              <Text style={{ fontSize: 40, marginTop: 10, color: "#F00" }}>■</Text>
+            </TouchableHighlight>
+            {/* <TouchableHighlight onPress={this.resetStartStopWatch}>
                     <Text style={{ fontSize: 45, marginTop: 10, color: "#F00" }}>♦</Text>
                 </TouchableHighlight> */}
-              </View>
-            </View >
-          </ScrollView>
-
-        </KeyboardAvoidingView>
-      </View>
+          </View >
+        </View >
+      </KeyboardAvoidingView>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -481,12 +513,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-
-  logs: {
-    textAlign: 'center',
-    fontSize: 20,
-    paddingTop: 15,
-  }
 
 });
 
