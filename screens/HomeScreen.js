@@ -26,19 +26,17 @@ const storage = new Storage({
   storageBackend: AsyncStorage
 })
 
-var array1 = [0];
+var array1 = [];
 var lap1 = [];
 
-var array2 = [0];
+var array2 = [];
 var lap2 = [];
 
-var array3 = [0];
+var array3 = [];
 var lap3 = [];
 
-var array4 = [0];
+var array4 = [];
 var lap4 = [];
-
-
 
 export default class App extends React.Component {
 
@@ -86,7 +84,6 @@ export default class App extends React.Component {
   resetStartStopWatch() {
     console.log(CURRENTTIME);
   }
-
 
   lapTime1() {  // lapTime  // 変えた
     CURRENTTIME = CURRENTTIME.replace(/:/g, '');
@@ -174,13 +171,8 @@ export default class App extends React.Component {
         key: this.className,
         data: this.state
       })
-
     }
   }
-
-
-
-
 
   //  plus1 = () => {
   //    if(this.state.counter1 = 0){
@@ -194,6 +186,7 @@ export default class App extends React.Component {
   //   })
   // }
   //  }
+
   plus1 = () => {
     this.setState({
       counter1: this.state.counter1 + 1
@@ -248,7 +241,6 @@ export default class App extends React.Component {
     array2 = [0];
     lap2 = [];
   }
-
 
   plus3 = () => {
     this.setState({
@@ -307,10 +299,7 @@ export default class App extends React.Component {
   render() {
     const platform = Platform.OS === 'ios' ? 'ios' : 'android';
 
-    // console.log(this.state.inputText1);
-
     return (
-
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.content}>
           <View style={styles.input}>
@@ -318,8 +307,6 @@ export default class App extends React.Component {
               style={styles.inputText}
               onChangeText={(text) => this.setState({ inputText1: text })}
               value={this.state.inputText1}
-
-
             />
 
           </View>
@@ -330,7 +317,6 @@ export default class App extends React.Component {
               text="+"
               function={this.plus1}
               style={{ backgroundColor: "blue" }}
-
             />
             <Button
               text="-"
@@ -360,7 +346,6 @@ export default class App extends React.Component {
               text="+"
               function={this.plus2}
               style={{ backgroundColor: "blue" }}
-
             />
             <Button
               text="-"
@@ -432,7 +417,6 @@ export default class App extends React.Component {
         </View >
         <View style={styles.content}>
           <View style={styles.display}>
-
             <Stopwatch laps msecs
               options={options}
               //options for the styling
@@ -442,18 +426,19 @@ export default class App extends React.Component {
               //To reset
               getTime={this.getFormattedTime} />
 
-
-            <TouchableHighlight onPress={this.startStopStopWatch}>
-              <Text style={{ fontSize: 45, marginTop: 10, color: "#00F" }}>
-                {!this.state.isStopwatchStart ? "▶" : "Ⅱ"}
-              </Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={this.resetStopwatch}>
-              <Text style={{ fontSize: 40, marginTop: 10, color: "#F00" }}>■</Text>
-            </TouchableHighlight>
-            {/* <TouchableHighlight onPress={this.resetStartStopWatch}>
+            <View style={{ flexDirection: "row", justifyContent: 'space-around', }}>
+              <TouchableHighlight onPress={this.startStopStopWatch} >
+                <Text style={{ fontSize: 45, marginTop: 10, color: "#00F" }}>
+                  {!this.state.isStopwatchStart ? "▶" : "Ⅱ"}
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={this.resetStopwatch}>
+                <Text style={{ fontSize: 40, marginTop: 10, color: "#F00" }}>■</Text>
+              </TouchableHighlight>
+              {/* <TouchableHighlight onPress={this.resetStartStopWatch}>
                     <Text style={{ fontSize: 45, marginTop: 10, color: "#F00" }}>♦</Text>
                 </TouchableHighlight> */}
+            </View>
           </View >
         </View >
       </KeyboardAvoidingView>
@@ -475,8 +460,9 @@ const styles = StyleSheet.create({
   counter: {
     fontSize: 50,
     paddingLeft: 75,
-    paddingTop: 35,
-    height: 120,
+    paddingTop: 30,
+
+    height: 100,
   },
 
   btnWrap: {
@@ -500,11 +486,12 @@ const styles = StyleSheet.create({
     margin: 10,
     width: 160,
     alignItems: "center",
-    flex: 2,
+
 
   },
   content: {
-    height: 220,
+    // flex:1,
+    height: '30%',
     width: '50%',
 
   },
@@ -516,10 +503,18 @@ const styles = StyleSheet.create({
 
   display: {
     flex: 1,
-    marginTop: 32,
+    marginTop: 52,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: '40%',
+
   },
+
+  logs: {
+    textAlign: 'center',
+    fontSize: 20,
+    paddingTop: 15,
+  }
 
 });
 
@@ -532,7 +527,7 @@ const options = {
     alignItems: 'center',
   },
   text: {
-    fontSize: 30,
+    fontSize: 35,
     color: '#FFF',
     marginLeft: 7,
   }
