@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "test",
+    "name": "CounterStopwatch",
     "slug": "test",
     "privacy": "public",
     "sdkVersion": "35.0.0",
@@ -23,7 +23,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.superathlete.CounterStopwatchapp",
+      "versionCode": 1
+    },
     "ios": {
+      "bundleIdentifier": "com.superathlete.CounterStopwatchapp",
       "supportsTablet": true
     }
   }
