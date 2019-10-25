@@ -88,7 +88,6 @@ export default class App extends React.Component {
   async lapTime1() {  // lapTime  // 変えた
     try {
       const logsListJson = await AsyncStorage.getItem('logsList:key');
-      let logsList = JSON.parse(logsListJson)
 
 
       CURRENTTIME = CURRENTTIME.replace(/:/g, '');
@@ -97,23 +96,36 @@ export default class App extends React.Component {
       // console.log(lap1);
       // console.log(this.state.inputText1);
       if (lap1.length > 1) {
-        // console.log(lap1[lap1.length - 1]);
+        console.log(lap1[lap1.length - 1]);
         let logItem = { task: this.state.inputText1, time: lap1[lap1.length - 1] }
         // console.log("-------------------------------")
         // console.log(logItem)
         // console.log("-------------------------------")
 
-        let newLogsList = [...logsList, logItem];
+        // logsがすでに入っている時
+        if (logsListJson) {
+          let logsList = JSON.parse(logsListJson)
+          let newLogsList = [logItem, ...logsList];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+            // Error saving data
+          }
+          // 最初のアイテムの時はこちらの条件文、logsがまだゼロの時はスプレッド構文が動かない
+        } else {
+          let newLogsList = [logItem];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+            // Error saving data
+          }
+        }
 
         // console.log("-------------------------------")
-        console.log(newLogsList)
+        // console.log(newLogsList)
         // console.log("-------------------------------")
-        try {
-          let logsJson = JSON.stringify(newLogsList)
-          await AsyncStorage.setItem('logsList:key', logsJson);
-        } catch (error) {
-          // Error saving data
-        }
       }
     } catch (error) {
       // Error retrieving data

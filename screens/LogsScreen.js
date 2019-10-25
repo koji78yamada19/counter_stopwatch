@@ -75,6 +75,7 @@ export default class LogsApp extends React.Component {
 
         let logsList = JSON.parse(LogsString);
         // let currentIndex = logsList.length;
+        console.log(LogsString)
         this.setState({
           logsList: logsList,
         });
@@ -109,7 +110,7 @@ export default class LogsApp extends React.Component {
       //logsListをJSONの形に変換
       let LogsString = JSON.stringify(logsList);
       //ここで保存を行う
-      await AsyncStorage.setItem(LOGS, LogsString);//awaitはbreakみたいに処理を終わらせてあげるもの
+      await AsyncStorage.setItem('logsList:key', LogsString);//awaitはbreakみたいに処理を終わらせてあげるもの
     } catch (e) {//tryが失敗した場合実行 elseぶんのようなもの
       console.log(e);//デバック用にエラーを吐くように
     }
