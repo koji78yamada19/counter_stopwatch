@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   AsyncStorage,//辞書型で文字列が保存ができる物mono
   filterText,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  RefreshControl,
 } from 'react-native';
 
 import { SearchBar, Input, Button, ListItem } from "react-native-elements"
@@ -163,7 +164,16 @@ export default class LogsApp extends React.Component {
           <Text style={styles.titlelogs}>LOGS</Text>
         </View>
 
-        <ScrollView style={styles.logsList}>
+        <ScrollView
+          style={styles.logsList}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
+
           <FlatList
             data={logsList}
             extraData={this.state}

@@ -135,87 +135,102 @@ export default class App extends React.Component {
   async lapTime2() {  // lapTime  // 変えた
     try {
       const logsListJson = await AsyncStorage.getItem('logsList:key');
-      let logsList = JSON.parse(logsListJson)
 
 
       CURRENTTIME = CURRENTTIME.replace(/:/g, '');
       array2.push(CURRENTTIME);
-      lap2.push((Number(CURRENTTIME) - Number(array2[array2.length - 2])) / 1000);  // - array[Number(array.length) - 1]
-
+      lap2.push((Number(CURRENTTIME) - Number(array2[array2.length - 2])) / 1000);
       if (lap2.length > 1) {
+        console.log(lap2[this.lapTime2.length - 1]);
         let logItem = { task: this.state.inputText2, time: lap2[lap2.length - 1] }
-
-        let newLogsList = [...logsList, logItem];
-
-        // console.log("-------------------------------")
-        console.log(newLogsList)
-        // console.log("-------------------------------")
-        try {
-          let logsJson = JSON.stringify(newLogsList)
-          await AsyncStorage.setItem('logsList:key', logsJson);
-        } catch (error) {
-          // Error saving data
+        if (logsListJson) {
+          let logsList = JSON.parse(logsListJson)
+          let newLogsList = [logItem, ...logsList];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+          }
+        } else {
+          let newLogsList = [logItem];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+          }
         }
       }
     } catch (error) {
-      // Error retrieving data
     }
   }
 
   async lapTime3() {  // lapTime  // 変えた
     try {
       const logsListJson = await AsyncStorage.getItem('logsList:key');
-      let logsList = JSON.parse(logsListJson)
 
 
       CURRENTTIME = CURRENTTIME.replace(/:/g, '');
       array3.push(CURRENTTIME);
-      lap3.push((Number(CURRENTTIME) - Number(array3[array3.length - 2])) / 1000);  // - array[Number(array.length) - 1]
-
+      lap3.push((Number(CURRENTTIME) - Number(array3[array3.length - 2])) / 1000);
       if (lap3.length > 1) {
+        console.log(lap3[lap3.length - 1]);
         let logItem = { task: this.state.inputText3, time: lap3[lap3.length - 1] }
 
-        let newLogsList = [...logsList, logItem];
-
-        // console.log("-------------------------------")
-        console.log(newLogsList)
-        // console.log("-------------------------------")
-        try {
-          let logsJson = JSON.stringify(newLogsList)
-          await AsyncStorage.setItem('logsList:key', logsJson);
-        } catch (error) {
-          // Error saving data
+        if (logsListJson) {
+          let logsList = JSON.parse(logsListJson)
+          let newLogsList = [logItem, ...logsList];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+          }
+        } else {
+          let newLogsList = [logItem];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+          }
         }
       }
     } catch (error) {
-      // Error retrieving data
     }
   }
 
   async lapTime4() {  // lapTime  // 変えた
     try {
       const logsListJson = await AsyncStorage.getItem('logsList:key');
-      let logsList = JSON.parse(logsListJson)
 
 
       CURRENTTIME = CURRENTTIME.replace(/:/g, '');
       array4.push(CURRENTTIME);
-      lap4.push((Number(CURRENTTIME) - Number(array4[array4.length - 2])) / 1000);  // - array[Number(array.length) - 1]
-
+      lap4.push((Number(CURRENTTIME) - Number(array4[array4.length - 2])) / 1000);
       if (lap4.length > 1) {
-        let logItem = { task: this.state.inputText2, time: lap4[lap4.length - 1] }
+        console.log(lap4[lap4.length - 1]);
+        let logItem = { task: this.state.inputText4, time: lap4[lap4.length - 1] }
+        if (logsListJson) {
+          let logsList = JSON.parse(logsListJson)
+          let newLogsList = [logItem, ...logsList];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
 
-        let newLogsList = [...logsList, logItem];
+          }
 
-        // console.log("-------------------------------")
-        console.log(newLogsList)
-        // console.log("-------------------------------")
-        try {
-          let logsJson = JSON.stringify(newLogsList)
-          await AsyncStorage.setItem('logsList:key', logsJson);
-        } catch (error) {
-          // Error saving data
+        } else {
+          let newLogsList = [logItem];
+          try {
+            let logsJson = JSON.stringify(newLogsList)
+            await AsyncStorage.setItem('logsList:key', logsJson);
+          } catch (error) {
+            // Error saving data
+          }
         }
+
+        // console.log("-------------------------------")
+        // console.log(newLogsList)
+        // console.log("-------------------------------")
       }
     } catch (error) {
       // Error retrieving data
